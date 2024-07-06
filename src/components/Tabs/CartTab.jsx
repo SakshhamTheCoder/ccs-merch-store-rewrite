@@ -52,6 +52,27 @@ const CartTab = () => {
                     "printing_name": "Sakshham Bhagat",
                     "size": "L",
                     "image_url": null
+                },
+                {
+                    "id": 3,
+                    "product": {
+                        "id": 3,
+                        "name": "ID card",
+                        "description": "Id hai",
+                        "price": "800.00",
+                        "max_quantity": 2,
+                        "is_name_required": true,
+                        "is_size_required": true,
+                        "is_image_required": false,
+                        "image1": "/media/product/Tshirt/CCS_Bulb.png",
+                        "image2": null,
+                        "status": "forbidden",
+                        "size_chart_image": null
+                    },
+                    "quantity": 1,
+                    "printing_name": "Sakshham Bhagat",
+                    "size": "L",
+                    "image_url": null
                 }
             ]
         );
