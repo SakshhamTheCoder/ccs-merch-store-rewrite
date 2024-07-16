@@ -5,7 +5,6 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Button, Loader } from '../components';
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Product = () => {
     const [loading, setLoading] = useState(true);
@@ -100,7 +99,6 @@ const Product = () => {
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 alert('Product already in cart or quantity limit exceeded');
-            } else {
             }
         } finally {
             setDisabled(true);
@@ -121,7 +119,6 @@ const Product = () => {
                         setButtonText('Out of stock');
                     }
                 }
-            }).catch(error => {
             });
     }, [productId]);
 

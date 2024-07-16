@@ -19,7 +19,6 @@ const CartTab = () => {
             .then(response => {
                 setCartProducts(response.items);
                 setCartAmt(response.total_amount);
-            }).catch(error => {
             }).finally(() => {
                 setLoading(false);
             });
@@ -69,7 +68,6 @@ const CartTab = () => {
             .then((response) => {
                 setCartProducts(response.items);
                 setCartAmt(response.total_amount);
-            }).catch(error => {
             }).finally(() => {
                 setIsUpdating(false);
             });

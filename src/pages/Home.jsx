@@ -13,7 +13,6 @@ const Home = ({ user }) => {
         api.get('/product/all')
             .then(response => {
                 setProducts(response); // Assuming response.data contains the array of products
-            }).catch(error => {
             }).finally(() => {
                 setLoading(false);
             });

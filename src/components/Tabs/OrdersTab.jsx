@@ -11,7 +11,6 @@ export const OrdersTab = () => {
         api.get('/order/all/')
             .then(response => {
                 setOrderedItems(response);
-            }).catch(error => {
             });
     };
     return (

@@ -21,7 +21,6 @@ const Checkout = () => {
                     discount_percentage: 0,
                     updated_amount: response.total_amount
                 });
-            }).catch(error => {
             });
     };
 
@@ -57,7 +56,6 @@ const Checkout = () => {
                 setCode('');
                 setCodeError(false);
                 setCodeApplied(false);
-            }).catch(error => {
             });
     };
 

@@ -5,7 +5,6 @@ import {
     Home,
     Login,
     Product,
-    Order,
     AuthVerify
 } from './pages';
 import { Loader, Navbar } from './components';
