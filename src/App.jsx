@@ -9,24 +9,27 @@ import {
     AuthVerify
 } from './pages';
 import { Loader, Navbar } from './components';
+import Checkout from './pages/Checkout';
 
 const App = () => {
-    // const authCtx = useContext(AuthContext);
-    // if (!authCtx.isAuthChecked) {
-    //     return <Loader />;
-    // }
+    const authCtx = useContext(AuthContext);
+    if (!authCtx.isAuthChecked) {
+        return (<div className='min-h-screen flex items-center justify-center'>
+            <Loader />;
+        </div>);
+    }
     return (
-        <div className="flex flex-col h-screen p-8 text-primary">
+        <div className="flex flex-col min-h-screen md:h-screen p-4 md:p-8 text-primary">
             <Router>
                 <Navbar />
                 <Routes>
-                    {/* <Route path="/login" element={!authCtx.isLoggedIn ? <Login /> : <Navigate to="/" />} /> */}
-                    {/* <Route path="/product/:id" element={authCtx.isLoggedIn ? <Product /> : <Navigate to="/login" />} /> */}
-                    {/* <Route path="/order" element={authCtx.isLoggedIn ? <Order /> : <Navigate to="/login" />} /> */}
-                    {/* <Route path="/" element={authCtx.isLoggedIn ? <Home user={authCtx.user} /> : <Navigate to="/login" />} /> */}
+                    <Route path="/login" element={!authCtx.isLoggedIn ? <Login /> : <Navigate to="/" />} />
+                    <Route path="/product/:id" element={authCtx.isLoggedIn ? <Product /> : <Navigate to="/login" />} />
+                    <Route path="/checkout" element={authCtx.isLoggedIn ? <Checkout /> : <Navigate to="/login" />} />
+                    <Route path="/" element={authCtx.isLoggedIn ? <Home user={authCtx.user} /> : <Navigate to="/login" />} />
                     <Route path="/" element={<Home />} />
-                    {/* <Route path="*" element={<Navigate to="/login" />} /> */}
-                    {/* <Route path="/authVerify" element={<AuthVerify />} /> */}
+                    <Route path="*" element={<Navigate to="/login" />} />
+                    <Route path="/authVerify" element={<AuthVerify />} />
                 </Routes>
             </Router>
         </div>

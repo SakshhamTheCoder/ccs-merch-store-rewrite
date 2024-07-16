@@ -3,11 +3,12 @@ import { useParams } from 'react-router-dom';
 import api from '../helpers/AxiosClient';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import { Button } from '../components';
+import { Button, Loader } from '../components';
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Product = () => {
+    const [loading, setLoading] = useState(true);
     const [product, setProduct] = useState({});
     const productId = useParams().id;
 
@@ -19,61 +20,108 @@ const Product = () => {
     const [image, setImage] = useState(null);
     const [quantity, setQuantity] = useState(1);
 
-    const AddToCart = () => {
-        console.log(name, size, image);
+    const [uploadedImageUrl, setUploadedImageUrl] = useState('');
+    const [isUploading, setIsUploading] = useState(false); // New state variable
+
+    const onImageSelect = (e) => {
+        if (e.target.files[0].size > 15000000) {
+            alert("File size should be below 15MB!");
+            setImage(null);
+        } else {
+            setImage(e.target.files[0]);
+        }
+    };
+
+    const uploadImage = async () => {
+        const formData = new FormData();
+        formData.append('file', image);
+        formData.append('upload_preset', 'ccs-merch');
+        formData.append('cloud_name', 'dgbobpgf4');
+
+        try {
+            setIsUploading(true); // Start uploading
+            const response = await fetch('https://api.cloudinary.com/v1_1/dgbobpgf4/image/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            setUploadedImageUrl(data.url);
+            setIsUploading(false); // End uploading
+            return data.url;
+        } catch (error) {
+            setIsUploading(false); // End uploading on error
+            throw new Error('Image upload failed');
+        }
+    };
+
+    const addToCart = async () => {
+
         if (product.status !== 'allowed') {
             setDisabled(true);
             return;
         }
-        if (product.is_name_required && (name === '' || name === null)) {
+
+        if (product.is_name_required && !name) {
             alert('Name is required');
             return;
         }
-        if (product.is_size_required && (size === '' || size === null)) {
+
+        if (product.is_size_required && !size) {
             alert('Size is required');
             return;
         }
-        if (product.is_image_required && (image === '' || image === null)) {
+
+        if (product.is_image_required && !image) {
             alert('Image is required');
             return;
         }
-        api.post('/cart/add/', {
-            product_id: productId,
-            printing_name: name,
-            size: size,
-            image_url: image,
-            quantity: quantity
-        }).then(response => {
-            console.log(response);
+
+        let imageUrl = uploadedImageUrl;
+        if (product.is_image_required && !uploadedImageUrl) {
+            try {
+                imageUrl = await uploadImage();
+            } catch (error) {
+                alert('Image upload failed');
+                return;
+            }
+        }
+
+        try {
+            const response = await api.post('/cart/add/', {
+                product_id: productId,
+                printing_name: product.is_name_required ? name : null,
+                size: product.is_size_required ? size : null,
+                image_url: product.is_image_required ? imageUrl : null,
+                quantity: quantity
+            });
+
             alert('Product added to cart');
             setButtonText('Already in cart');
-        }).catch(error => {
-            if (error.response.status === 400) {
+        } catch (error) {
+            if (error.response && error.response.status === 400) {
                 alert('Product already in cart or quantity limit exceeded');
+            } else {
             }
-        }).finally(() => {
+        } finally {
             setDisabled(true);
-        });
-
+        }
     };
 
     useEffect(() => {
         api.get(`/product/${productId}`)
             .then(response => {
+                setLoading(false);
                 setProduct(response);
                 if (response.status !== 'allowed') {
                     if (response.status === 'incart') {
                         setDisabled(true);
                         setButtonText('Already in cart');
-                    }
-                    else {
+                    } else {
                         setDisabled(true);
                         setButtonText('Out of stock');
                     }
                 }
-                console.log(response);
             }).catch(error => {
-                console.error(error);
             });
     }, [productId]);
 
@@ -97,81 +145,78 @@ const Product = () => {
     };
 
     return (
-        <div className='flex flex-col sm:flex-row gap-8 rounded-lg items-center w-full sm:overflow-hidden h-full'>
-            <div className='flex flex-col rounded-lg p-8 shadow-lg border-2 h-full w-full sm:w-1/3 bg-container justify-center items-center md:p-16'>
-                <Carousel showThumbs={false} infiniteLoop={true} autoPlay={true} showStatus={false} showArrows={true}>
-                    <div>
-                        <img src='https://media.merch.ccstiet.com/product/ID_Card/CCS_MEM-01.png' alt='Product' />
-                    </div>
-                    <div>
-                        <img src='https://media.merch.ccstiet.com/product/ID_Card/CCS_MEM-01.png' alt='Product' />
-                    </div>
-                    <div>
-                        <img src='https://media.merch.ccstiet.com/product/ID_Card/CCS_MEM-01.png' alt='Product' />
-                    </div>
-                </Carousel>
+        <div className='flex flex-col md:flex-row gap-8 rounded-lg items-center w-full h-full'>
+            <div className='flex flex-col rounded-lg p-8 shadow-lg border-2 h-full w-full sm:w-1/3 bg-container justify-center items-center '>
+                {loading ? <Loader /> :
+                    <Carousel className='w-5/6' showThumbs={false} infiniteLoop={true} autoPlay={true} showStatus={false} showArrows={true}>
+                        <div>
+                            <img src='https://media.merch.ccstiet.com/product/ID_Card/CCS_MEM-01.png' alt='Product' />
+                        </div>
+                        <div>
+                            <img src='https://media.merch.ccstiet.com/product/ID_Card/CCS_MEM-01.png' alt='Product' />
+                        </div>
+                        <div>
+                            <img src='https://media.merch.ccstiet.com/product/ID_Card/CCS_MEM-01.png' alt='Product' />
+                        </div>
+                    </Carousel>
+                }
             </div>
-            <div className='rounded-lg p-4 shadow-lg border-2 h-full flex-1 bg-container w-full sm:overflow-auto'>
+            <div className='rounded-lg p-4 shadow-lg border-2 h-full flex-1 bg-container w-full'>
                 <div className='flex flex-col p-2 gap-8 h-full'>
-                    <div>
-                        <div className='text-3xl font-bold capitalize flex justify-between items-center'>
-                            {product.name}
-                            <div className='text-xl font-bold'>₹{product.price}</div>
-                        </div>
-                        <div className='text-l flex justify-between sm:items-center flex-col sm:flex-row'>
-                            {product.description}
-                            <div>Max Quantity: {product.max_quantity}</div>
-                        </div>
-                    </div>
-                    <div className='flex flex-col gap-2'>
-                        {
-                            product.is_name_required && (
-                                <div className='flex flex-col'>
-                                    <label htmlFor='name' className='text-l'>Printing Name:</label>
-                                    <input type='text' id='name' className='rounded-lg border-2 p-2' onChange={(e) => setName(e.target.value)} />
+                    {loading ? <Loader /> :
+                        <>
+                            <div>
+                                <div className='text-3xl font-bold capitalize flex justify-between items-center'>
+                                    {product.name}
+                                    <div className='text-xl font-bold'>₹{product.price}</div>
                                 </div>
-                            )
-                        }
-                        {
-                            product.is_size_required && (
-                                <div className='flex flex-col'>
-                                    <label htmlFor='size' className='text-l'>Size:
-                                        {
-                                            product.size_chart_image != null && (
-                                                <a href={product.size_chart_image} target='_blank' rel='noreferrer' className='ml-2 text-blue-700 text-xs'>
+                                <div className='text-l flex justify-between sm:items-center flex-col sm:flex-row'>
+                                    {product.description}
+                                    <div>Max Quantity: {product.max_quantity}</div>
+                                </div>
+                            </div>
+                            <div className='flex flex-col gap-2'>
+                                {product.is_name_required && (
+                                    <div className='flex flex-col'>
+                                        <label htmlFor='name' className='text-l'>Printing Name:</label>
+                                        <input type='text' id='name' className='rounded-lg border-2 p-2' onChange={(e) => setName(e.target.value)} />
+                                    </div>
+                                )}
+                                {product.is_size_required && (
+                                    <div className='flex flex-col'>
+                                        <label htmlFor='size' className='text-l'>Size:
+                                            {product.size_chart_image && (
+                                                <a href={product.size_chart_image} target='_blank' rel='noreferrer' className='ml-2 text-blue-500 text-xs'>
                                                     Size Chart
                                                 </a>
-                                            )
-                                        }
-                                    </label>
-
-                                    <select id='size' className='rounded-lg border-2 p-2' value={size} onChange={(e) => setSize(e.target.value)}>
-                                        <option>Select Size</option>
-                                        <option value='S'>Small</option>
-                                        <option value='M'>Medium</option>
-                                        <option value='L'>Large</option>
-                                        <option value='XL'>Extra Large</option>
-                                    </select>
+                                            )}
+                                        </label>
+                                        <select id='size' className='rounded-lg border-2 p-2' value={size} onChange={(e) => setSize(e.target.value)}>
+                                            <option>Select Size</option>
+                                            <option value='S'>Small</option>
+                                            <option value='M'>Medium</option>
+                                            <option value='L'>Large</option>
+                                            <option value='XL'>Extra Large</option>
+                                        </select>
+                                    </div>
+                                )}
+                                {product.is_image_required && (
+                                    <div className='flex flex-col'>
+                                        <label htmlFor='image' className='text-l'>Upload Image:</label>
+                                        <input type='file' id='image' className='rounded-lg border-2 p-2' onChange={onImageSelect} />
+                                    </div>
+                                )}
+                            </div>
+                            <div className='mt-auto flex items-center gap-4'>
+                                <div className='flex items-center gap-2'>
+                                    <button onClick={decreaseQuantity} className='rounded-lg border-2 p-2'>-</button>
+                                    <input type='number' value={quantity} onChange={handleQuantityChange} className='rounded-lg border-2 p-2 w-16 text-center' min='1' max={product.max_quantity} />
+                                    <button onClick={increaseQuantity} className='rounded-lg border-2 p-2'>+</button>
                                 </div>
-                            )
-                        }
-                        {
-                            product.is_image_required && (
-                                <div className='flex flex-col'>
-                                    <label htmlFor='image' className='text-l'>Upload Image:</label>
-                                    <input type='file' id='image' className='rounded-lg border-2 p-2' onChange={(e) => setImage(e.target.files[0])} />
-                                </div>
-                            )
-                        }
-                    </div>
-                    <div className='mt-auto flex items-center gap-4'>
-                        <div className='flex items-center gap-2'>
-                            <button onClick={decreaseQuantity} className='rounded-lg border-2 p-2'>-</button>
-                            <input type='number' value={quantity} onChange={handleQuantityChange} className='rounded-lg border-2 p-2 w-16 text-center' min='1' max={product.max_quantity} />
-                            <button onClick={increaseQuantity} className='rounded-lg border-2 p-2'>+</button>
-                        </div>
-                        <Button disabled={disabled} text={buttonText} icon={faCartPlus} isActive className='w-full items-center flex justify-center py-2' onClick={AddToCart} />
-                    </div>
+                                <Button disabled={disabled || isUploading} text={buttonText} icon={faCartPlus} isActive className='w-full items-center flex justify-center py-2' onClick={addToCart} />
+                            </div>
+                        </>
+                    }
                 </div>
             </div>
         </div>

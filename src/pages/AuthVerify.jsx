@@ -3,11 +3,11 @@ import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import AuthContext from "../helpers/AuthContext";
 import styles from "./test.module.css";
+import { Loader } from "../components";
 
 function AuthVerify() {
     const [searchParams, setSearchParams] = useSearchParams();
     const token = searchParams.get("token");
-    console.log(token);
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ function AuthVerify() {
 
     return (
         <div className="flex justify-center items-center">
-            {loading && <p>Verifying...</p>}
+            {loading && <Loader />}
         </div>
     );
 }

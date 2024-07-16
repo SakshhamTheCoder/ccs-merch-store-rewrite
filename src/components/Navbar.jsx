@@ -1,12 +1,14 @@
 import React, { useState, useContext } from 'react';
-import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faX } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ccs_bulb from '../assets/CCS_Bulb.png';
 import AuthContext from '../helpers/AuthContext';
 import { Link } from 'react-router-dom';
+import Button from './Button';
 
 const Navbar = () => {
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+    const [isHelpModalVisible, setIsHelpModalVisible] = useState(false);
     const authCtx = useContext(AuthContext);
 
     const toggleDropdown = () => {
@@ -21,10 +23,21 @@ const Navbar = () => {
     const handleHelp = () => {
         // Add help functionality here
         setIsDropdownVisible(false);
+        setIsHelpModalVisible(!isHelpModalVisible);
 
     };
 
-    return (
+    return (<>
+        <div className={`${isHelpModalVisible ? "flex" : "hidden"} fixed z-50 inset-0 bg-black bg-opacity-50 items-center justify-center`}>
+            <div className="bg-white p-8 rounded-lg w-96 m-8">
+                <div className='flex justify-between items-center'>
+                    <h1 className="text-2xl font-bold">Help</h1>
+                    <Button icon={faX} onClick={() => setIsHelpModalVisible(false)} className="text-2xl font-bold bg-transparent" />
+                </div>
+                <p className="mt-4">For any queries, contact us at <a href="mailto:ccs@thapar.edu" className="text-blue-500 font-bold">ccs@thapar.edu</a>
+                </p>
+            </div>
+        </div>
         <div className='select-none p-8 mb-8 rounded-xl shadow-lg text-white w-full h-16 bg-primary flex items-center justify-between'>
             <div className="flex-1 text-left font-bold text-2xl">
                 <Link to="/">
@@ -60,6 +73,7 @@ const Navbar = () => {
                 )}
             </div>
         </div>
+    </>
     );
 };
 

@@ -1,87 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../helpers/AxiosClient';
+import Button from '../Button';
+import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 
 const CartTab = () => {
     const [cartProducts, setCartProducts] = useState([]);
+    const [cartAmt, setCartAmt] = useState(0);
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchCartItems();
     }, []);
 
     const fetchCartItems = () => {
-        setCartProducts(
-            [
-                {
-                    "id": 1,
-                    "product": {
-                        "id": 1,
-                        "name": "Hoodie",
-                        "description": "Hoodieseeeeeee",
-                        "price": "1000.00",
-                        "max_quantity": 1,
-                        "is_name_required": true,
-                        "is_size_required": true,
-                        "is_image_required": false,
-                        "image1": "/media/product/Hoodie/CCS_Bulb_n3hqUTY.png",
-                        "image2": null,
-                        "status": "forbidden",
-                        "size_chart_image": null
-                    },
-                    "quantity": 1,
-                    "printing_name": "Sakshham Bhagat",
-                    "size": "S",
-                    "image_url": null
-                },
-                {
-                    "id": 2,
-                    "product": {
-                        "id": 2,
-                        "name": "Tshirt",
-                        "description": "Tshirt hai",
-                        "price": "925.00",
-                        "max_quantity": 2,
-                        "is_name_required": true,
-                        "is_size_required": true,
-                        "is_image_required": false,
-                        "image1": "/media/product/Tshirt/CCS_Bulb.png",
-                        "image2": null,
-                        "status": "forbidden",
-                        "size_chart_image": null
-                    },
-                    "quantity": 1,
-                    "printing_name": "Sakshham Bhagat",
-                    "size": "L",
-                    "image_url": null
-                },
-                {
-                    "id": 3,
-                    "product": {
-                        "id": 3,
-                        "name": "ID card",
-                        "description": "Id hai",
-                        "price": "800.00",
-                        "max_quantity": 2,
-                        "is_name_required": true,
-                        "is_size_required": true,
-                        "is_image_required": false,
-                        "image1": "/media/product/Tshirt/CCS_Bulb.png",
-                        "image2": null,
-                        "status": "forbidden",
-                        "size_chart_image": null
-                    },
-                    "quantity": 1,
-                    "printing_name": "Sakshham Bhagat",
-                    "size": "L",
-                    "image_url": null
-                }
-            ]
-        );
-        // api.get('/cart/view/')
-        //     .then(response => {
-        //         setCartProducts(response); // Assuming response contains the array of cart products directly
-        //     }).catch(error => {
-        //         console.error(error);
-        //     });
+        api.get('/cart/view/')
+            .then(response => {
+                setCartProducts(response.items);
+                setCartAmt(response.total_amount);
+            }).catch(error => {
+            }).finally(() => {
+                setLoading(false);
+            });
     };
 
     const increaseQuantity = (productId) => {
@@ -102,13 +43,13 @@ const CartTab = () => {
     const decreaseQuantity = (productId, currentQuantity) => {
         if (currentQuantity === 1) {
             if (window.confirm(`Are you sure you want to remove ${cartProducts.find(product => product.id === productId)?.product.name} from your cart?`)) {
+                setIsUpdating(true);
                 api.post('/cart/delete/', { cart_item_id: productId })
                     .then(() => {
-                        const updatedCart = cartProducts.filter(product => product.id !== productId);
-                        setCartProducts(updatedCart);
+                        fetchCartItems();
                     }).catch(error => {
-                        console.error(error);
-                        // Handle error
+                    }).finally(() => {
+                        setIsUpdating(false);
                     });
             }
         } else {
@@ -123,24 +64,26 @@ const CartTab = () => {
     };
 
     const updateCart = (updatedCart) => {
+        setIsUpdating(true);
         api.post('/cart/update/', { cart_items: updatedCart })
-            .then(() => {
-                setCartProducts(updatedCart);
+            .then((response) => {
+                setCartProducts(response.items);
+                setCartAmt(response.total_amount);
             }).catch(error => {
-                console.error(error);
-                // Handle error
+            }).finally(() => {
+                setIsUpdating(false);
             });
     };
 
-    return (
-        <div className='flex flex-col h-full'>
-            <div className='overflow-auto flex-1 flex-col'>
-                {cartProducts.map(product => (
-                    <div key={product.id} className='my-2 rounded-lg border-2 border-gray-200 bg-zinc-100'>
+    return (!loading &&
+        <div className='flex flex-col h-full gap-4 justify-between'>
+            <div className={`${isUpdating ? 'opacity-50' : 'opacity-100'} transition duration-300 flex overflow-auto flex-col flex-1 basis-0 gap-4`}>
+                {cartProducts.length > 0 ? cartProducts.map(product => (
+                    <div key={product.id} className='rounded-lg border-2 border-gray-200 bg-zinc-100'>
                         <div className='flex justify-between items-center border-b-2 rounded-lg bg-white px-4'>
                             <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/991px-Placeholder_view_vector.svg.png' alt={product.product.name} className='w-16 h-auto rounded-md' />
                             <div>
-                                <p className=''>{product.product.name}</p>
+                                <p>{product.product.name}</p>
                                 <p className='font-bold'>₹{product.product.price}</p>
                             </div>
                             <div className='flex justify-center items-center'>
@@ -154,9 +97,9 @@ const CartTab = () => {
                                 <div className='mx-4 h-8 border-l border-gray-600'></div>
                                 {/* Quantity control */}
                                 <div className='flex flex-col items-center'>
-                                    <button className='rounded-lg py-1' onClick={() => increaseQuantity(product.id)}>+</button>
+                                    <button className='rounded-lg py-1' onClick={() => increaseQuantity(product.id)} disabled={isUpdating}>+</button>
                                     <span>{product.quantity}</span>
-                                    <button className='rounded-lg py-1' onClick={() => decreaseQuantity(product.id, product.quantity)}>-</button>
+                                    <button className='rounded-lg py-1' onClick={() => decreaseQuantity(product.id, product.quantity)} disabled={isUpdating}>-</button>
                                 </div>
                             </div>
                         </div>
@@ -166,29 +109,27 @@ const CartTab = () => {
                             </div>
                         )}
                     </div>
-                ))}
+                )) :
+                    <div className='flex justify-center items-center h-full'>
+                        <p>Your cart is empty!</p>
+                    </div>
+                }
             </div>
-            <div className='bg-gray-100 p-4 mt-auto'>
-                <div className='flex flex-col'>
-                    <div className='flex justify-between'>
-                        <span>Order Value:</span>
-                        <span>xyz</span>
+            {cartProducts.length > 0 && <>
+                <hr className='border-t-2 border-gray-200 rounded-lg' />
+                <div>
+                    <div className='flex flex-col'>
+                        <div className='flex justify-between'>
+                            <span>Subtotal:</span>
+                            <span className='font-bold'>₹{cartAmt}</span>
+                        </div>
                     </div>
-                    <div className='flex justify-between'>
-                        <span>Delivery:</span>
-                        <span>xyz</span>
-                    </div>
-                    <div className='flex justify-between'>
-                        <span>Discount:</span>
-                        <span>xyz</span>
-                    </div>
-                    <div className='flex justify-between'>
-                        <span>Subtotal:</span>
-                        <span>xyz</span>
-                    </div>
+                    <Link to='/checkout'>
+                        <Button className='px-4 py-2 mt-4 w-full' disabled={isUpdating} icon={faMoneyBill} isActive text="Checkout" />
+                    </Link>
                 </div>
-                <button className='bg-primary text-white rounded-lg px-4 py-2 mt-4 w-full'>Checkout</button>
-            </div>
+            </>}
+
         </div>
     );
 };
