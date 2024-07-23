@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import api from '../helpers/AxiosClient';
 import Button from '../components/Button';
 import { faGift, faMoneyBill, faRemove } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, redirect } from 'react-router-dom';
 
 const Checkout = () => {
     const [cartProducts, setCartProducts] = useState([]);
@@ -59,6 +59,23 @@ const Checkout = () => {
             });
     };
 
+    const handleCheckout = () => {
+        if (cartProducts.length === 0) {
+            return;
+        }
+        let body = {};
+        if (codeApplied) {
+            body = { discount_code: code.toUpperCase() };
+        }
+        api.post('/order/place/', body)
+            .then(response => {
+                alert('Order placed successfully!');
+                redirect('/');
+            }).catch(error => {
+                alert('Something went wrong! Please try again later.');
+            });
+    };
+
     useEffect(() => {
         fetchCartItems();
     }, []);
@@ -97,9 +114,10 @@ const Checkout = () => {
                                 <span className='font-bold'>₹{parseFloat(cartAmt.updated_amount).toFixed(2)}</span>
                             </div>
                         </div>
-                        <Link to='/checkout'>
+                        <Button onClick={handleCheckout} className='px-4 py-2 mt-4 w-full' icon={faMoneyBill} isActive text="Pay Now" />
+                        {/* <Link to='/checkout'>
                             <Button className='px-4 py-2 mt-4 w-full' icon={faMoneyBill} isActive text="Pay Now" />
-                        </Link>
+                        </Link> */}
                     </div>
                 </div>
 

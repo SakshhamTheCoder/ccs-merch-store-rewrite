@@ -30,7 +30,10 @@ const Home = ({ user }) => {
                 <HomeTabs />
             </div>
             <div className='rounded-lg p-4 shadow-lg border-2 h-full flex-1 bg-container'>
-                {loading ? <Loader /> :
+                {loading ? <Loader /> : <div className='h-full'>
+                    {products.length === 0 && <div className='flex justify-center items-center h-full'>
+                        <p>No products to show!</p>
+                    </div>}
                     <div className='grid md:grid-cols-3 gap-4 p-2 grid-cols-2'>
                         {products.map(product => (
                             <Link to={`/product/${product.id}`} key={product.id} className='rounded-md p-4 border-2 bg-white flex flex-col hover:scale-105 transition-all'>
@@ -39,7 +42,8 @@ const Home = ({ user }) => {
                                 <div className='font-bold'>₹{product.price}/-</div>
                             </Link>
                         ))}
-                    </div>}
+                    </div>
+                </div>}
             </div>
         </div>
     );
