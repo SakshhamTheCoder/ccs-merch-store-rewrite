@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../helpers/AxiosClient';
 import Button from '../Button';
-import { faMoneyBill } from '@fortawesome/free-solid-svg-icons';
+import { faCartArrowDown, faMoneyBill } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 
 const CartTab = () => {
@@ -123,7 +123,7 @@ const CartTab = () => {
                         </div>
                     </div>
                     <Link to='/checkout'>
-                        <Button className='px-4 py-2 mt-4 w-full' disabled={isUpdating} icon={faMoneyBill} isActive text="Checkout" />
+                        <Button className='px-4 py-2 mt-4 w-full' disabled={isUpdating} icon={faCartArrowDown} isActive text="Checkout" />
                     </Link>
                 </div>
             </>}

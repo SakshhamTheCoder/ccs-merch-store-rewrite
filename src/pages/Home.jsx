@@ -29,7 +29,7 @@ const Home = ({ user }) => {
                 <hr className='my-2 border-2 rounded-lg ' />
                 <HomeTabs />
             </div>
-            <div className='rounded-lg p-4 shadow-lg border-2 h-full flex-1 bg-container'>
+            <div id="prodCont" className='rounded-lg p-4 shadow-lg border-2 flex-1 bg-container overflow-auto h-full'>
                 {loading ? <Loader /> : <div className='h-full'>
                     {products.length === 0 && <div className='flex justify-center items-center h-full'>
                         <p>No products to show!</p>
@@ -37,12 +37,15 @@ const Home = ({ user }) => {
                     <div className='grid md:grid-cols-3 gap-4 p-2 grid-cols-2'>
                         {products.map(product => (
                             <Link to={`/product/${product.id}`} key={product.id} className='rounded-md p-4 border-2 bg-white flex flex-col hover:scale-105 transition-all'>
-                                <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/991px-Placeholder_view_vector.svg.png' alt={product.name} className='w-full h-auto' />
+                                <div className="w-full h-64 overflow-hidden flex items-center justify-center">
+                                    <img src={`http://localhost:8000${product.image1}`} alt={product.name} className='w-full h-full object-contain border' />
+                                </div>
                                 <div className='text-xl mt-3'>{product.name}</div>
                                 <div className='font-bold'>₹{product.price}/-</div>
                             </Link>
                         ))}
                     </div>
+
                 </div>}
             </div>
         </div>

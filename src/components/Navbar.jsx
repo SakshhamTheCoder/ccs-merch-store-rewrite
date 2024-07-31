@@ -5,8 +5,11 @@ import ccs_bulb from '../assets/CCS_Bulb.png';
 import AuthContext from '../helpers/AuthContext';
 import { Link } from 'react-router-dom';
 import Button from './Button';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
+    const navigate = useNavigate();
+
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const [isHelpModalVisible, setIsHelpModalVisible] = useState(false);
     const authCtx = useContext(AuthContext);
@@ -24,8 +27,12 @@ const Navbar = () => {
         // Add help functionality here
         setIsDropdownVisible(false);
         setIsHelpModalVisible(!isHelpModalVisible);
-
     };
+
+    const handlePolicies = () => {
+        navigate('/policies');
+        setIsDropdownVisible(!isDropdownVisible);
+    }
 
     return (<>
         <div className={`${isHelpModalVisible ? "flex" : "hidden"} fixed z-50 inset-0 bg-black bg-opacity-50 items-center justify-center`}>
@@ -62,6 +69,12 @@ const Navbar = () => {
                                     </li>
                                 )
                             }
+                            <li
+                                className="px-4 py-2 hover:bg-primaryHover hover:rounded-md cursor-pointer"
+                                onClick={handlePolicies}
+                            >
+                                Policies and About
+                            </li>
                             <li
                                 className="px-4 py-2 hover:bg-primaryHover hover:rounded-md cursor-pointer"
                                 onClick={handleHelp}

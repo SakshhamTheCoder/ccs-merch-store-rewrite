@@ -5,10 +5,11 @@ import {
     Home,
     Login,
     Product,
-    AuthVerify
+    AuthVerify,
+    Checkout, 
+    Policies
 } from './pages';
 import { Loader, Navbar } from './components';
-import Checkout from './pages/Checkout';
 
 const App = () => {
     const authCtx = useContext(AuthContext);
@@ -25,8 +26,8 @@ const App = () => {
                     <Route path="/login" element={!authCtx.isLoggedIn ? <Login /> : <Navigate to="/" />} />
                     <Route path="/product/:id" element={authCtx.isLoggedIn ? <Product /> : <Navigate to="/login" />} />
                     <Route path="/checkout" element={authCtx.isLoggedIn ? <Checkout /> : <Navigate to="/login" />} />
+                    <Route path="/policies" element={<Policies />} />
                     <Route path="/" element={authCtx.isLoggedIn ? <Home user={authCtx.user} /> : <Navigate to="/login" />} />
-                    <Route path="/" element={<Home />} />
                     <Route path="*" element={<Navigate to="/login" />} />
                     <Route path="/authVerify" element={<AuthVerify />} />
                 </Routes>
