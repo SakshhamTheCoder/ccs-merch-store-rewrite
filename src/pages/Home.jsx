@@ -34,7 +34,7 @@ const Home = ({ user }) => {
                     {products.length === 0 && <div className='flex justify-center items-center h-full'>
                         <p>No products to show!</p>
                     </div>}
-                    <div className='grid md:grid-cols-3 gap-4 p-2 grid-cols-2'>
+                    <div className='grid md:grid-cols-3 gap-4 grid-cols-2'>
                         {products.map(product => (
                             <Link to={`/product/${product.id}`} key={product.id} className='rounded-md p-4 border-2 bg-white flex flex-col hover:scale-105 transition-all'>
                                 <div className="w-full h-64 overflow-hidden flex items-center justify-center">
@@ -45,7 +45,6 @@ const Home = ({ user }) => {
                             </Link>
                         ))}
                     </div>
-
                 </div>}
             </div>
         </div>
