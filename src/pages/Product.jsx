@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import api from '../helpers/AxiosClient';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
@@ -10,6 +10,7 @@ const Product = () => {
     const [loading, setLoading] = useState(true);
     const [product, setProduct] = useState({});
     const productId = useParams().id;
+    const navigate = useNavigate();
 
     const [disabled, setDisabled] = useState(false);
     const [buttonText, setButtonText] = useState('Add to cart');
@@ -96,6 +97,7 @@ const Product = () => {
 
             alert('Product added to cart');
             setButtonText('Already in cart');
+            navigate('/');
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 alert('Product already in cart or quantity limit exceeded');
@@ -142,7 +144,10 @@ const Product = () => {
     };
 
     return (
-        <div className='flex flex-col md:flex-row gap-8 rounded-lg items-center w-full h-full'>
+        <div className={`flex flex-col md:flex-row gap-8 rounded-lg items-center w-full h-full ${isUploading ? "opacity-50 pointer-events-none" : "opacity-100 pointer-events-auto"}`}>
+            {isUploading && <div className='absolute w-full h-full flex justify-center items-center'>
+                <Loader />
+            </div>}
             <div className='flex flex-col rounded-lg p-8 shadow-lg border-2 h-full w-full sm:w-1/3 bg-container justify-center items-center '>
                 {loading ? <Loader /> :
                     <Carousel className='w-5/6' showThumbs={false} infiniteLoop={true} autoPlay={true} showStatus={false} showArrows={true}>

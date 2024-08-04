@@ -6,8 +6,9 @@ import {
     Login,
     Product,
     AuthVerify,
-    Checkout, 
-    Policies
+    Checkout,
+    Policies,
+    PaymentStatus
 } from './pages';
 import { Loader, Navbar } from './components';
 
@@ -30,6 +31,7 @@ const App = () => {
                     <Route path="/" element={authCtx.isLoggedIn ? <Home user={authCtx.user} /> : <Navigate to="/login" />} />
                     <Route path="*" element={<Navigate to="/login" />} />
                     <Route path="/authVerify" element={<AuthVerify />} />
+                    <Route path="/payment-status/:txnid" element={authCtx.isLoggedIn ? <PaymentStatus /> : <Navigate to="/login" />} />
                 </Routes>
             </Router>
         </div>

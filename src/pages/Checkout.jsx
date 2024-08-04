@@ -12,6 +12,10 @@ const Checkout = () => {
     const [codeApplied, setCodeApplied] = useState(false);
     const [codeError, setCodeError] = useState(false);
 
+    const [paymentPayload, setPaymentPayload] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [disabled, setDisabled] = useState(false);
+
     const fetchCartItems = () => {
         api.get('/cart/view/')
             .then(response => {
@@ -23,6 +27,7 @@ const Checkout = () => {
                 });
             });
     };
+
 
     const applyDiscount = () => {
         if (code === '') {
@@ -59,7 +64,9 @@ const Checkout = () => {
             });
     };
 
-    const handleCheckout = () => {
+    const handlePayment = (e) => {
+        e.preventDefault();
+        setDisabled(true);
         if (cartProducts.length === 0) {
             return;
         }
@@ -69,8 +76,10 @@ const Checkout = () => {
         }
         api.post('/order/place/', body)
             .then(response => {
-                alert('Order placed successfully!');
-                redirect('/');
+                api.post(`/payment/${response.order.id}/`).then(response => {
+                    setPaymentPayload(response);
+                    setLoading(false);
+                });
             }).catch(error => {
                 alert('Something went wrong! Please try again later.');
             });
@@ -79,6 +88,12 @@ const Checkout = () => {
     useEffect(() => {
         fetchCartItems();
     }, []);
+
+    useEffect(() => {
+        if (!loading && paymentPayload) {
+            document.getElementById("paymentForm").submit();
+        }
+    }, [paymentPayload, loading]);
     return (
         <div className='flex flex-col-reverse md:flex-row gap-8 rounded-lg items-center w-full h-full'>
             <div className='flex flex-col rounded-lg p-6 shadow-lg border-2 h-full w-full md:w-1/3 bg-container'>
@@ -114,22 +129,39 @@ const Checkout = () => {
                                 <span className='font-bold'>₹{parseFloat(cartAmt.updated_amount).toFixed(2)}</span>
                             </div>
                         </div>
-                        <Button onClick={handleCheckout} className='px-4 py-2 mt-4 w-full' icon={faMoneyBill} isActive text="Pay Now" />
-                        {/* <Link to='/checkout'>
-                            <Button className='px-4 py-2 mt-4 w-full' icon={faMoneyBill} isActive text="Pay Now" />
-                        </Link> */}
+                        <form action='https://test.payu.in/_payment' method='post' onSubmit={handlePayment} id="paymentForm">
+                            <input type="hidden" name="key" value={paymentPayload.key} />
+                            <input type="hidden" name="txnid" value={paymentPayload.txnid} />
+                            <input type="hidden" name="amount" value={paymentPayload.amount} />
+                            <input type="hidden" name="firstname" value={paymentPayload.firstname} />
+                            <input type="hidden" name="email" value={paymentPayload.email} />
+                            <input type="hidden" name="phone" value={paymentPayload.phone} />
+                            <input type="hidden" name="productinfo" value={paymentPayload.productinfo} />
+                            {/* <input type="hidden" name="lastname" value={paymentPayload.lastName}  /> */}
+                            <input type="hidden" name="surl" value={paymentPayload.surl} />
+                            <input type="hidden" name="furl" value={paymentPayload.furl} />
+                            <input type="hidden" name="udf1" value={paymentPayload.udf1} />
+                            <input type="hidden" name="udf2" value={paymentPayload.udf2} />
+                            <input type="hidden" name="udf3" value={paymentPayload.udf3} />
+                            <input type="hidden" name="udf4" value={paymentPayload.udf4} />
+                            <input type="hidden" name="udf5" value={paymentPayload.udf5} />
+                            <input type="hidden" name="hash" value={paymentPayload.hash} />
+                            <Button type="submit" disabled={disabled} className='px-4 py-2 mt-4 w-full' icon={faMoneyBill} isActive text="Pay Now" />
+
+                        </form>
                     </div>
                 </div>
 
             </div>
-            <div className='rounded-lg p-4 shadow-lg border-2 h-full w-full flex-1 bg-container'>
-                <div className='flex flex-col flex-1 gap-4 overflow-auto'>
+            <div className='rounded-lg p-4 shadow-lg border-2 h-full flex-1 bg-container overflow-auto md:h-[calc(100vh-10rem)] w-full'>
+                <div className='flex flex-col flex-1 gap-4'>
                     {cartProducts.length > 0 ? cartProducts.map(product => (
                         <div key={product.id} className='rounded-lg border-2 border-gray-200 bg-zinc-100 justify-center'>
                             <div className='flex justify-between items-center border-b-2 rounded-lg bg-white p-4'>
-                                <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/991px-Placeholder_view_vector.svg.png' alt={product.product.name} className='w-16 h-auto rounded-md' />
+                                {/* <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/991px-Placeholder_view_vector.svg.png' alt={product.product.name} className='w-16 h-auto rounded-md' /> */}
+                                <img src={`http://localhost:8000${product.product.image1}`} alt={product.product.name} className='w-64 h-auto rounded-md' />
                                 <p>{product.product.name}</p>
-                                <p className='font-bold flex flex-col items-start'>
+                                <p className='font-bold flex flex-col items-center'>
                                     ₹{parseFloat(product.product.price * product.quantity).toFixed(2)}
                                     <span className='text-xs text-gray-500'>₹{product.product.price} x {product.quantity}</span>
                                 </p>

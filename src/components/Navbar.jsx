@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { faUser, faX } from '@fortawesome/free-solid-svg-icons';
+import { faX, faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ccs_bulb from '../assets/CCS_Bulb.png';
 import AuthContext from '../helpers/AuthContext';
@@ -32,7 +32,7 @@ const Navbar = () => {
     const handlePolicies = () => {
         navigate('/policies');
         setIsDropdownVisible(!isDropdownVisible);
-    }
+    };
 
     return (<>
         <div className={`${isHelpModalVisible ? "flex" : "hidden"} fixed z-50 inset-0 bg-black bg-opacity-50 items-center justify-center`}>
@@ -55,7 +55,7 @@ const Navbar = () => {
                 <img src={ccs_bulb} alt="Logo" className="p-2" />
             </a>
             <div className="relative sm:flex-1 flex justify-end">
-                <FontAwesomeIcon icon={faUser} onClick={toggleDropdown} className="cursor-pointer font-bold text-2xl" />
+                <FontAwesomeIcon icon={faBars} onClick={toggleDropdown} className="cursor-pointer font-bold text-2xl" />
                 {isDropdownVisible && (
                     <div className="absolute right-0 top-12 w-48 bg-primary rounded-md shadow-lg z-10">
                         <ul>

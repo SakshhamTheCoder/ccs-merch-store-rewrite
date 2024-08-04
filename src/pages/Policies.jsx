@@ -38,7 +38,7 @@ const Policies = () => {
                     <li>• Your position</li>
                 </ul>
                 <br /> <br />
-                <b>How We Use Your Information</b><br />
+                <b>How We Use Your Information:</b><br />
                 <u>To process and fulfill your orders:</u> <br />
                 This includes shipping your products, sending order confirmation and tracking details, and managing returns or exchanges. <br /><br />
                 <u>To communicate with you:</u> <br />
@@ -47,7 +47,7 @@ const Policies = () => {
         },
     ];
     return (
-        <div className='flex flex-col-reverse md:flex-row gap-8 rounded-lg items-center w-full h-full'>
+        <div className='flex flex-col md:flex-row gap-8 rounded-lg items-center w-full h-full'>
             <div className='flex flex-col rounded-lg p-6 shadow-lg border-2 h-full w-full md:w-1/3 bg-container'>
                 <div className='text-3xl font-bold'>
                     Policies and About
