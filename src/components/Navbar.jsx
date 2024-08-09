@@ -51,8 +51,8 @@ const Navbar = () => {
                     Merch Store
                 </Link>
             </div>
-            <a href="https://ccstiet.com" target='_blank' className='relative w-[5.4rem] h-24 bg-primary rounded-[50%/40%] justify-center items-center mx-auto hidden sm:flex'>
-                <img src={ccs_bulb} alt="Logo" className="p-2" />
+            <a draggable={false} href="https://ccstiet.com" target='_blank' className='relative w-[5.4rem] h-24 bg-primary rounded-[50%/40%] justify-center items-center mx-auto hidden sm:flex'>
+                <img src={ccs_bulb} alt="Logo" className="p-2 select-none" draggable={false} />
             </a>
             <div className="relative sm:flex-1 flex justify-end">
                 <FontAwesomeIcon icon={faBars} onClick={toggleDropdown} className="cursor-pointer font-bold text-2xl" />
@@ -73,7 +73,7 @@ const Navbar = () => {
                                 className="px-4 py-2 hover:bg-primaryHover hover:rounded-md cursor-pointer"
                                 onClick={handlePolicies}
                             >
-                                Policies and About
+                                Policies
                             </li>
                             <li
                                 className="px-4 py-2 hover:bg-primaryHover hover:rounded-md cursor-pointer"

@@ -95,7 +95,7 @@ const Checkout = () => {
         }
     }, [paymentPayload, loading]);
     return (
-        <div className='flex flex-col-reverse md:flex-row gap-8 rounded-lg items-center w-full h-full'>
+        <div className='flex flex-col md:flex-row gap-8 rounded-lg items-center w-full h-full'>
             <div className='flex flex-col rounded-lg p-6 shadow-lg border-2 h-full w-full md:w-1/3 bg-container'>
                 <div className='text-3xl font-bold capitalize'>
                     Checkout
@@ -125,7 +125,7 @@ const Checkout = () => {
                                 <span className='font-bold'>{cartAmt.discount_percentage}%</span>
                             </div>
                             <div className='flex justify-between'>
-                                <span>Subtotal:</span>
+                                <span>Subtotal: {cartAmt.updated_amount === 1.00 && <p className='inline-block text-xs'>Minimum transaction fee is ₹1.00</p>}</span>
                                 <span className='font-bold'>₹{parseFloat(cartAmt.updated_amount).toFixed(2)}</span>
                             </div>
                         </div>

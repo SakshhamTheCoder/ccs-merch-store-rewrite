@@ -150,17 +150,18 @@ const Product = () => {
             </div>}
             <div className='flex flex-col rounded-lg p-8 shadow-lg border-2 h-full w-full sm:w-1/3 bg-container justify-center items-center '>
                 {loading ? <Loader /> :
-                    <Carousel className='w-5/6' showThumbs={false} infiniteLoop={true} autoPlay={true} showStatus={false} showArrows={true}>
-                        <div>
-                            <img src='https://media.merch.ccstiet.com/product/ID_Card/CCS_MEM-01.png' alt='Product' />
-                        </div>
-                        <div>
-                            <img src='https://media.merch.ccstiet.com/product/ID_Card/CCS_MEM-01.png' alt='Product' />
-                        </div>
-                        <div>
-                            <img src='https://media.merch.ccstiet.com/product/ID_Card/CCS_MEM-01.png' alt='Product' />
-                        </div>
-                    </Carousel>
+                    <>
+                        {
+                            product.image2 ? <Carousel className='w-5/6' showThumbs={false} infiniteLoop={true} autoPlay={true} showStatus={false} showArrows={true}>
+                                {product.image1 && <img src={`http://localhost:8000${product.image1}`} alt='Product' />}
+                                {product.image2 && <img src={`http://localhost:8000${product.image2}`} alt='Product' />}
+                            </Carousel> :
+                                <Carousel className='w-5/6' showThumbs={false} infiniteLoop={true} autoPlay={true} showStatus={false} showArrows={true}>
+                                    {product.image1 && <img src={`http://localhost:8000${product.image1}`} alt='Product' />}
+                                </Carousel>
+                        }
+                    </>
+
                 }
             </div>
             <div className='rounded-lg p-4 shadow-lg border-2 h-full flex-1 bg-container w-full'>

@@ -18,9 +18,11 @@ const Login = () => {
                     CCS Merchandise Store
                 </div>
                 <hr className='my-6 border-2 rounded-lg w-1/2' />
-                <Button className="py-2" isActive icon={faSignIn} text="Sign in with CCS" onClick={() => window.location.replace(`https://auth.ccstiet.com/auth/google/?clientId=6674641394172361ee893797&callback=${window.location.origin}/authVerify`)}>
+                <Button className="py-2" isActive icon={faSignIn} text="Sign in with CCS" onClick={() => window.location.replace(`https://auth.ccstiet.com/auth/google/?clientId=6674641394172361ee893797&callback=${window.location.origin}/authVerify`)} />
 
-                </Button>
+                <div className='text-center mt-auto'>
+                    <Link to='/policies' className='text-blue-500 font-bold underline'>Refer to our policies</Link>
+                </div>
             </div>
         </div>
     );
