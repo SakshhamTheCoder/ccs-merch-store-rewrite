@@ -145,6 +145,7 @@ const Checkout = () => {
                             <input type="hidden" name="udf3" value={paymentPayload.udf3} />
                             <input type="hidden" name="udf4" value={paymentPayload.udf4} />
                             <input type="hidden" name="udf5" value={paymentPayload.udf5} />
+                            <input type="hidden" name="enforce_paymethod" value="upi" />
                             <input type="hidden" name="hash" value={paymentPayload.hash} />
                             <Button type="submit" disabled={disabled} className='px-4 py-2 mt-4 w-full' icon={faMoneyBill} isActive text="Pay Now" />
 

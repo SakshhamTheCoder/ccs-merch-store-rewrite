@@ -2,7 +2,6 @@ import api from "../helpers/AxiosClient";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import AuthContext from "../helpers/AuthContext";
-import styles from "./test.module.css";
 import { Loader } from "../components";
 
 function AuthVerify() {
