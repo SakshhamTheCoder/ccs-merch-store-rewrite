@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../helpers/AxiosClient';
 import { HomeTabs, Loader } from '../components';
+import api_url from '../helpers/Config';
 
 
 
@@ -38,7 +39,7 @@ const Home = ({ user }) => {
                         {products.map(product => (
                             <Link to={`/product/${product.id}`} key={product.id} className='rounded-md p-4 border-2 bg-white flex flex-col hover:scale-105 transition-all'>
                                 <div className="w-full h-80 overflow-hidden flex items-center justify-center">
-                                    <img src={`http://localhost:8000${product.image1}`} alt={product.name} className='w-full h-full object-contain border' />
+                                    <img src={`${api_url}/${product.image1}`} alt={product.name} className='w-full h-full object-contain border' />
                                 </div>
                                 <div className='text-xl mt-3'>{product.name}</div>
                                 <div className='font-bold'>₹{product.price}/-</div>

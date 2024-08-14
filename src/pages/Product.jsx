@@ -5,6 +5,7 @@ import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Button, Loader } from '../components';
 import { faCartPlus } from '@fortawesome/free-solid-svg-icons';
+import api_url from '../helpers/Config';
 
 const Product = () => {
     const [loading, setLoading] = useState(true);
@@ -144,20 +145,20 @@ const Product = () => {
     };
 
     return (
-        <div className={`flex flex-col md:flex-row gap-8 rounded-lg items-center w-full h-full ${isUploading ? "opacity-50 pointer-events-none" : "opacity-100 pointer-events-auto"}`}>
+        <div className={`flex flex-col md:flex-row gap-8 rounded-lg items-center w-full h-full ${isUploading ? "opacity-50 pointer-events-none" : "opacity-100 pointer-events-auto"} md:h-[calc(100vh-10rem)]`}>
             {isUploading && <div className='absolute w-full h-full flex justify-center items-center'>
                 <Loader />
             </div>}
-            <div className='flex flex-col rounded-lg p-8 shadow-lg border-2 h-full w-full sm:w-1/3 bg-container justify-center items-center '>
+            <div className='flex flex-col rounded-lg p-8 shadow-lg border-2 h-full w-full md:w-1/3 bg-container justify-center items-center '>
                 {loading ? <Loader /> :
                     <>
                         {
                             product.image2 ? <Carousel className='w-5/6' showThumbs={false} infiniteLoop={true} autoPlay={true} showStatus={false} showArrows={true}>
-                                {product.image1 && <img src={`http://localhost:8000${product.image1}`} alt='Product' />}
-                                {product.image2 && <img src={`http://localhost:8000${product.image2}`} alt='Product' />}
+                                {product.image1 && <img src={`${api_url}/${product.image1}`} alt='Product' />}
+                                {product.image2 && <img src={`${api_url}/${product.image2}`} alt='Product' />}
                             </Carousel> :
                                 <Carousel className='w-5/6' showThumbs={false} infiniteLoop={true} autoPlay={true} showStatus={false} showArrows={true}>
-                                    {product.image1 && <img src={`http://localhost:8000${product.image1}`} alt='Product' />}
+                                    {product.image1 && <img src={`${api_url}/${product.image1}`} alt='Product' />}
                                 </Carousel>
                         }
                     </>

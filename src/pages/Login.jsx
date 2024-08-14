@@ -10,7 +10,7 @@ const Login = () => {
     const navigate = useNavigate();
     const authCtx = useContext(AuthContext);
     return (
-        <div className='flex gap-8 rounded-lg items-center w-full h-full'>
+        <div className='flex gap-8 rounded-lg items-center w-full  h-[calc(100vh-10rem)]'>
             <div className='flex flex-col rounded-lg p-8 shadow-lg border-2 h-full w-full bg-container justify-center items-center md:p-16'>
                 <div className='text-4xl font-bold text-center'>
                     Welcome to

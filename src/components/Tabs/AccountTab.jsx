@@ -7,7 +7,7 @@ const AccountTab = () => {
 
     return (
         <div className='flex flex-col justify-evenly items-center h-full'>
-            <img src={auth.user.profilePic} alt="" className='rounded-full' />
+            <img src={auth.user.profilePic} alt="" className='rounded-full' referrerPolicy="no-referrer" />
             <div className='flex flex-col text-left'>
                 <p>
                     <span className='font-bold'>Name: </span>
