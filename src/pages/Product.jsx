@@ -153,12 +153,12 @@ const Product = () => {
                 {loading ? <Loader /> :
                     <>
                         {
-                            product.image2 ? <Carousel className='w-5/6' showThumbs={false} infiniteLoop={true} autoPlay={true} showStatus={false} showArrows={true}>
-                                {product.image1 && <img src={`${api_url}/${product.image1}`} alt='Product' />}
-                                {product.image2 && <img src={`${api_url}/${product.image2}`} alt='Product' />}
+                            product.image2 ? <Carousel className='w-4/6' showThumbs={false} infiniteLoop={true} autoPlay={true} showStatus={false} showArrows={true}>
+                                {product.image1 && <img src={`${api_url}/${product.image1}`} alt='Product' className='object-contain' />}
+                                {product.image2 && <img src={`${api_url}/${product.image2}`} alt='Product' className='object-contain' />}
                             </Carousel> :
-                                <Carousel className='w-5/6' showThumbs={false} infiniteLoop={true} autoPlay={true} showStatus={false} showArrows={true}>
-                                    {product.image1 && <img src={`${api_url}/${product.image1}`} alt='Product' />}
+                                <Carousel className='w-4/6' showThumbs={false} infiniteLoop={true} autoPlay={true} showStatus={false} showArrows={true}>
+                                    {product.image1 && <img src={`${api_url}/${product.image1}`} alt='Product 22222' className='object-contain' />}
                                 </Carousel>
                         }
                     </>

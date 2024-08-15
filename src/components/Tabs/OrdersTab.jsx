@@ -68,7 +68,7 @@ export const OrdersTab = () => {
                                     <div className='flex flex-col rounded-lg border-2 border-gray-200 bg-zinc-100'>
                                         <div key={index} className='flex justify-between items-center border-b-2 rounded-lg bg-white p-4'>
                                             {/* <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/991px-Placeholder_view_vector.svg.png' alt={item.product.name} className='w-16 h-auto rounded-md' /> */}
-                                            <img src={`${api_url}/${item.product.image1}`} alt={item.product.name} className='w-1/3 h-auto rounded-md' />
+                                            <img src={`${api_url}/${item.product.image1}`} alt={item.product.name} className='w-1/3 h-auto rounded-md object-contain' />
                                             <div>{item.product.name}</div>
                                             <div>{item.quantity} x {item.product.price}</div>
                                         </div>
