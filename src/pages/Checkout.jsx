@@ -161,7 +161,7 @@ const Checkout = () => {
                         <div key={product.id} className='rounded-lg border-2 border-gray-200 bg-zinc-100 justify-center'>
                             <div className='flex justify-between items-center border-b-2 rounded-lg bg-white p-4'>
                                 {/* <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/991px-Placeholder_view_vector.svg.png' alt={product.product.name} className='w-16 h-auto rounded-md' /> */}
-                                <img src={`${api_url}/${product.product.image1}`} alt={product.product.name} className='w-1/3 md:w-1/5 h-auto rounded-md object-contain' />
+                                <img src={`${api_url}${product.product.image1}`} alt={product.product.name} className='w-1/3 md:w-1/5 h-auto rounded-md object-contain' />
                                 <p>{product.product.name}</p>
                                 <p className='font-bold flex flex-col items-center'>
                                     ₹{parseFloat(product.product.price * product.quantity).toFixed(2)}
